@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { GeneratedExcuse } from "@/pages/home";
+import { useStealthMode } from "@/components/stealth-mode-provider";
 
 interface ExcuseDisplayProps {
   excuse: GeneratedExcuse;
@@ -11,6 +12,7 @@ interface ExcuseDisplayProps {
 export default function ExcuseDisplay({ excuse, onTriggerFakeCall, onTriggerVideoCall }: ExcuseDisplayProps) {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
+  const { getMaskedLabel } = useStealthMode();
 
   const handleCopyExcuse = async () => {
     try {
@@ -50,7 +52,7 @@ export default function ExcuseDisplay({ excuse, onTriggerFakeCall, onTriggerVide
     <div className="mb-8 animate-fade-in-up">
       <div className="bg-gradient-to-r from-ios-blue to-blue-600 dark:from-blue-800 dark:to-blue-900 p-6 rounded-2xl text-white">
         <div className="flex items-start justify-between mb-3">
-          <h3 className="font-semibold">Your Excuse</h3>
+          <h3 className="font-semibold">{getMaskedLabel('Your Excuse', 'Preview')}</h3>
           <button 
             onClick={handleCopyExcuse}
             className="text-white/80 hover:text-white transition-colors ios-active"
@@ -99,7 +101,7 @@ export default function ExcuseDisplay({ excuse, onTriggerFakeCall, onTriggerVide
             onClick={handleShare}
             className="bg-white/20 dark:bg-white/30 px-3 py-2 rounded-lg text-xs font-medium ios-active hover:bg-white/30 dark:hover:bg-white/40 transition-colors"
           >
-            <i className="fas fa-share mr-1"></i> Share
+            <i className="fas fa-share mr-1"></i> {getMaskedLabel('Share', 'Export')}
           </button>
         </div>
       </div>

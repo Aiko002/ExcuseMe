@@ -1,4 +1,12 @@
+import { useEffect, useState } from "react";
+
 export default function StatusBar() {
+  // Keep time updated every minute
+  const [, force] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => force((x) => x + 1), 60_000);
+    return () => clearInterval(id);
+  }, []);
   const currentTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",

@@ -1,4 +1,4 @@
-# ExitScript
+# ExcuseMe
 
 ---
 
@@ -11,13 +11,16 @@ Check out the live application here: [https://exitscript.onrender.com/](https://
 
 ## Overview
 
-ExitScript is a mobile-first Progressive Web Application (PWA) designed to help users generate AI-powered excuses for uncomfortable social situations. The app provides quick excuse generation across various categories (work, family, health, transport) with different tones, and includes realistic fake call and video call features with voice synthesis to help users exit situations safely. It is built as a full-stack TypeScript application with a React frontend and Express backend.
+ExcuseMe is a mobile-first Progressive Web Application (PWA) designed to help users generate AI-powered excuses for uncomfortable social situations. The app provides quick excuse generation across various categories (work, family, health, transport) with different tones, and includes realistic fake call and video call features with voice synthesis to help users exit situations safely. It is built as a full-stack TypeScript application with a React frontend and Express backend.
 
 ---
 
 ## Features
 
 - Comprehensive local fallback excuse system  
+- Stealth mode UI with masked labels and a quick toggle  
+- Excuse history page with recent list and full history view  
+- Quick trigger gestures (triple‑tap and shake) to trigger emergency flow  
 - Realistic webcam integration for video calls showing actual user video feed- asks for webcam permission 
 - Enhanced video calls with simulated caller video using CSS animations and graphics  
 - Reduced dependency on OpenAI API by prioritizing local excuses (70% local, 30% AI)  
