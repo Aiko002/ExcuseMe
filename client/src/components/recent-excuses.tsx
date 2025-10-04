@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { useStealthMode } from "@/components/stealth-mode-provider";
+import { Link } from "wouter";
 import type { GeneratedExcuse } from "@/pages/home";
 import type { Excuse } from "@shared/schema";
 
@@ -9,6 +11,7 @@ interface RecentExcusesProps {
 
 export default function RecentExcuses({ onExcuseSelected }: RecentExcusesProps) {
   const { toast } = useToast();
+  const { getMaskedLabel } = useStealthMode();
 
   const { data: recentExcuses = [], isLoading, error } = useQuery<Excuse[]>({
     queryKey: ["/api/excuses/recent"],
@@ -54,7 +57,9 @@ export default function RecentExcuses({ onExcuseSelected }: RecentExcusesProps) 
   if (error) {
     return (
       <div>
-        <h3 className="font-semibold mb-3">Recent Excuses</h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold">{getMaskedLabel('Recent Excuses', 'Recent Items')}</h3>
+        </div>
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
           <p className="text-red-600 dark:text-red-400 text-sm">Unable to load recent excuses</p>
         </div>
@@ -64,7 +69,10 @@ export default function RecentExcuses({ onExcuseSelected }: RecentExcusesProps) 
 
   return (
     <div>
-      <h3 className="font-semibold mb-3 text-black dark:text-white">Recent Excuses</h3>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-semibold text-black dark:text-white">{getMaskedLabel('Recent Excuses', 'Recent')}</h3>
+        <Link href="/history" className="text-xs text-ios-blue hover:underline">{getMaskedLabel('View all', 'See all')}</Link>
+      </div>
       
       {isLoading ? (
         <div className="space-y-3">
@@ -78,8 +86,8 @@ export default function RecentExcuses({ onExcuseSelected }: RecentExcusesProps) 
       ) : recentExcuses.length === 0 ? (
         <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
           <i className="fas fa-history text-gray-400 dark:text-gray-500 text-2xl mb-2"></i>
-          <p className="text-gray-600 dark:text-gray-400 text-sm">No recent excuses</p>
-          <p className="text-gray-500 dark:text-gray-500 text-xs mt-1">Generate an excuse to see it here</p>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">{getMaskedLabel('No recent excuses', 'No recent items')}</p>
+          <p className="text-gray-500 dark:text-gray-500 text-xs mt-1">{getMaskedLabel('Generate an excuse to see it here', 'Create a note to see it here')}</p>
         </div>
       ) : (
         <div className="space-y-2">

@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { GeneratedExcuse } from "@/pages/home";
+import { useStealthMode } from "@/components/stealth-mode-provider";
 
 interface EmergencyButtonProps {
   onEmergencyCall: (excuse: GeneratedExcuse, contact: { name: string; relationship: string }) => void;
@@ -11,6 +13,7 @@ interface EmergencyButtonProps {
 
 export default function EmergencyButton({ onEmergencyCall, onEmergencyVideo, selectedTone }: EmergencyButtonProps) {
   const { toast } = useToast();
+  const { isStealth } = useStealthMode();
 
   const emergencyMutation = useMutation({
     mutationFn: async (callType: string = "audio") => {
@@ -48,6 +51,16 @@ export default function EmergencyButton({ onEmergencyCall, onEmergencyVideo, sel
     emergencyMutation.mutate("video");
   };
 
+  // Listen to global quick trigger event
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail || { type: "audio" };
+      emergencyMutation.mutate(detail.type === "video" ? "video" : "audio");
+    };
+    window.addEventListener("exitscript:triggerEmergency", handler as EventListener);
+    return () => window.removeEventListener("exitscript:triggerEmergency", handler as EventListener);
+  }, [emergencyMutation]);
+
   return (
     <div className="mb-8">
       <div className="grid grid-cols-2 gap-3 mb-3">
@@ -59,7 +72,7 @@ export default function EmergencyButton({ onEmergencyCall, onEmergencyVideo, sel
           }`}
         >
           <i className="fas fa-phone mr-2"></i>
-          {emergencyMutation.isPending ? 'Calling...' : 'Emergency Call'}
+          {emergencyMutation.isPending ? 'Calling...' : (isStealth ? 'Quick Call' : 'Emergency Call')}
         </button>
         
         <button 
@@ -70,11 +83,11 @@ export default function EmergencyButton({ onEmergencyCall, onEmergencyVideo, sel
           }`}
         >
           <i className="fas fa-video mr-2"></i>
-          {emergencyMutation.isPending ? 'Calling...' : 'Emergency Video'}
+          {emergencyMutation.isPending ? 'Calling...' : (isStealth ? 'Quick Video' : 'Emergency Video')}
         </button>
       </div>
       <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-        Instant excuse + fake call/video when you feel unsafe
+        {isStealth ? 'Instant quick call/video' : 'Instant excuse + fake call/video when you feel unsafe'}
       </p>
     </div>
   );
