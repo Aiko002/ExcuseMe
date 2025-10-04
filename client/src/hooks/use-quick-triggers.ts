@@ -57,12 +57,10 @@ export function useQuickTriggers({
     };
 
     window.addEventListener("pointerdown", handlePointer, { passive: true });
-    window.addEventListener("touchend", handlePointer, { passive: true });
     window.addEventListener("devicemotion", handleMotion as EventListener, { passive: true } as any);
 
     return () => {
       window.removeEventListener("pointerdown", handlePointer);
-      window.removeEventListener("touchend", handlePointer);
       window.removeEventListener("devicemotion", handleMotion as EventListener);
     };
   }, [enabled, onTriggerAudio, onTriggerVideo, tripleTapWindowMs, shakeThreshold, shakeWindowMs]);
